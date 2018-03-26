@@ -1,0 +1,57 @@
+<html>
+
+<head>
+</head>
+
+
+<body>
+<h3>This is the index.</h3>
+<div id="content"></div>
+
+
+
+
+<!-- scripts -->
+<script src="{{ url_for('static', filename='bower_components/react/react.min.js') }}"></script>
+<script src="{{ url_for('static', filename='bower_components/react/react-dom.min.js') }}"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/JSXTransformer.js"></script>
+<script type="text/jsx">
+
+  /*** @jsx React.DOM */
+
+  var realPython = React.createClass({
+    render: function() {
+      console.log('{{ user_email }}')
+      if ('{{ user_email }}' == '' | '{{ user_email }}' == 'None') {
+        return (
+          <div>
+            <a href="/login">Login</a>
+            <br/>
+            <a href="/register">Register</a>
+          </div>
+        );
+      } 
+      else {
+        // display a greeting to the currently logged in user
+        return (
+          <div>
+            <h2>Greetings, {{ user_email }}!</h2>
+            <a href="/logout">Logout</a>
+          </div>
+        );
+      }
+    }
+  });
+
+  ReactDOM.render(
+    React.createElement(realPython, null),
+    document.getElementById('content')
+  );
+
+</script>
+
+
+</body>
+
+
+</html>

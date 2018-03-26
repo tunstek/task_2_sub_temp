@@ -1,0 +1,105 @@
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/style.css') }}">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+
+<body>
+<h3>This is the register form.</h3>
+
+<div id="register_form">
+  <form id="form" method="post" enctype='application/json'>
+    <div class="wrap">
+      <input type="text" id="email_input" name="email" placeholder="email">
+      <label for="email" class="error" id="email_empty_error">This field is required.</label>
+      <label for="email" class="error" id="email_invalid_error">Please enter a valid email address.</label>
+    </div>
+    <div class="wrap">
+      <input type="password" id="password_input" name="password" placeholder="password">
+      <label for="password" class="error" id="password_empty_error">This field is required.</label>
+      <label for="password" class="error" id="password_length_error">Password must be at least 6 characters long.</label>
+    </div>
+    <input type="submit" id="submit_button" value="Submit">
+  </form>
+</div>
+
+
+
+
+
+<script>
+
+$(document).ready(function() {
+  $('.error').hide();
+});
+
+
+$("#form").submit(function(event) {
+  event.preventDefault();
+
+  $('.error').hide();
+
+  submit = true;
+  email = $("#email_input").val()
+  psw = $("#password_input").val()
+
+  if (email == '') {
+    $('#email_empty_error').show();
+    submit = false
+  }
+  else if (invalidEmail(email)) {
+    $('#email_invalid_error').show();
+    submit = false
+  }
+  if (psw == '') {
+    $('#password_empty_error').show();
+    submit = false
+  }
+  else if (psw.length < 6) {
+    $('#password_length_error').show();
+    submit = false
+  }
+
+
+  if (submit) {
+    dataString = "email=" + email + "&password=" + psw;
+    $.ajax({
+      type: "POST",
+      url: "/register",
+      credentials: "include",
+      data: dataString,
+      success: function(data) {
+        //display message back to user here
+        if (data == "Email already exists!") {
+          $("#register_form").append(data);
+        }
+        else {
+          location.href = "{{ url_for('index') }}";
+        }
+      },
+      error: function() {
+        $("#register_form").append("An error occured! - The AJAX request did not complete");
+      }
+    });
+    return false;
+  }
+});
+
+
+
+function invalidEmail(email_str) {
+  // FROM: https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
+  var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return !re.test(String(email_str).toLowerCase());
+}
+
+
+</script>
+
+
+
+</body>
+
+
+</html>
