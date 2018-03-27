@@ -3,7 +3,6 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
 engine = create_engine('mysql://root:root@db', convert_unicode=True, pool_recycle=3600) # Docker-compose seperate db
-engine.execute("SET @@global.sql_mode= 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION'")
 
 engine.execute("CREATE DATABASE IF NOT EXISTS task_2_db")
 engine.execute("USE task_2_db")
